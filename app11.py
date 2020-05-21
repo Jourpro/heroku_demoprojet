@@ -86,7 +86,6 @@ dash_app1.layout = html.Div([
 
 
         html.Div([
-    #       html.Label(['Real Estate, Car Owner, Contract type and Education type']),
             dcc.Dropdown(
                 id='my_dropdown_binaries',
                 options=[
