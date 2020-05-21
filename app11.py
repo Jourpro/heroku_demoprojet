@@ -13,6 +13,7 @@ import xgboost as xgb
 from xgboost import XGBClassifier
 from sklearn import preprocessing
 
+# loading external stylesheets of boostrap
 external_stylesheets = ['/static/bootstrap.min.css']
 
 server = flask.Flask(__name__)
