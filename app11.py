@@ -13,6 +13,7 @@ import xgboost as xgb
 from xgboost import XGBClassifier
 from sklearn import preprocessing
 
+# loading external stylesheets of boostrap
 external_stylesheets = ['/static/bootstrap.min.css']
 
 server = flask.Flask(__name__)
@@ -80,13 +81,11 @@ dash_app1.layout = html.Div([
         }),
 
 
-#    html.Div(id='display-selected-values'),
 
     html.Div([
 
 
         html.Div([
-    #       html.Label(['Real Estate, Car Owner, Contract type and Education type']),
             dcc.Dropdown(
                 id='my_dropdown_binaries',
                 options=[
@@ -101,8 +100,7 @@ dash_app1.layout = html.Div([
             ),
         ],
         style={'width': '33%', 'display': 'inline-block'}
-    #    className='col-4'
-    #    className = 'four columns'
+    
         ),
 
         html.Div([
