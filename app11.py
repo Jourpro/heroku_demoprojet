@@ -80,7 +80,6 @@ dash_app1.layout = html.Div([
         }),
 
 
-#    html.Div(id='display-selected-values'),
 
     html.Div([
 
