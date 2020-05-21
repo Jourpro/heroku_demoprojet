@@ -101,8 +101,7 @@ dash_app1.layout = html.Div([
             ),
         ],
         style={'width': '33%', 'display': 'inline-block'}
-    #    className='col-4'
-    #    className = 'four columns'
+    
         ),
 
         html.Div([
