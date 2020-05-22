@@ -23,8 +23,8 @@ dash_app1 = Dash(__name__, server = server, url_base_pathname='/dashboard/',exte
 
 # loading dataframe
 df1 = pd.read_csv('df_test_red_dash.csv')
-#df = df1
-df = df1[:200]
+df = df1
+#df = df1[:200]
 
 # standard scaling before computing prediction
 std_scale_red = preprocessing.StandardScaler()
@@ -277,6 +277,7 @@ def set_display_children(client_sk_num):
     a1 = int(df['Client region with city rating'][df['SK_ID_CURR'] == client_sk_num].iloc[0])
     a2 = int(df['Education income rating'][df['SK_ID_CURR'] == client_sk_num].iloc[0])
     a3 = int(df['Cash or revolving loan'][df['SK_ID_CURR'] == client_sk_num].iloc[0])
+    a4 = int(df['Age, employment experience, registration and publication date rating'][df['SK_ID_CURR'] == client_sk_num].iloc[0])
     if a1 == 1:
         city_rating = 'first'
     elif a1 == 2:
@@ -296,6 +297,11 @@ def set_display_children(client_sk_num):
     elif a3 == 0:
         cash_revolving_loan = 'revolving loan'
 
+    if a4 == 1:
+        age_employment_experience = 'high' 
+    elif a4 == 0:
+        age_employment_experience = 'low'
+
 #Age, employment experience, registration and publication date rating
     return (u'The client number {} has been {} to loan with a probability of {:.3f} and threshold of {} based on the following criteria \
         in order of significance. The client has {} total years of loan (loan/annuity) and \
@@ -304,7 +310,7 @@ def set_display_children(client_sk_num):
                      installments. The client had {} drawings for a month, 60 days ago \
                          and {} days past due during the month of previous credit. The \
                               client region with city rating is {}. The education income \
-                                   rating is {}. This is a {}.'.format(client_sk_num,target_message,target,Threshold_loan,
+                                   rating is {}. The client age, employment experience, registration and publication date rating is {}. This is a {}.'.format(client_sk_num,target_message,target,Threshold_loan,
     int(df['Total years of loan (loan/annuity)'][df['SK_ID_CURR'] == client_sk_num].iloc[0]),
     int(df['Prescribed installment amount of previous credit on this installment'][df['SK_ID_CURR'] == client_sk_num].iloc[0]),
     df['Residency external option rating'][df['SK_ID_CURR'] == client_sk_num].iloc[0],
@@ -313,6 +319,7 @@ def set_display_children(client_sk_num):
     int(df['Days past due during the month of previous credit'][df['SK_ID_CURR'] == client_sk_num].iloc[0]),
     city_rating,
     education_income_rating,
+    age_employment_experience,
     cash_revolving_loan))
 
 # callback for the 1st piechart
