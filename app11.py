@@ -1,3 +1,4 @@
+# importing libraries
 from dash import Dash
 import dash_core_components as dcc
 import dash_html_components as html
@@ -16,45 +17,53 @@ from sklearn import preprocessing
 # loading external stylesheets of boostrap
 external_stylesheets = ['/static/bootstrap.min.css']
 
+# lauching flask app
 server = flask.Flask(__name__)
 dash_app1 = Dash(__name__, server = server, url_base_pathname='/dashboard/',external_stylesheets=external_stylesheets)
 
-
+# loading dataframe
 df1 = pd.read_csv('df_test_red_dash.csv')
 #df = df1
 df = df1[:200]
 
-
+# standard scaling before computing prediction
 std_scale_red = preprocessing.StandardScaler()
 X_red_scaled = df.drop(columns=['SK_ID_CURR'])
 X_red_scaled[X_red_scaled.columns] = std_scale_red.fit_transform(X_red_scaled[X_red_scaled.columns])
 
+# loading the xgboost classifier model
 model_xgb = xgb.XGBClassifier()
 booster = xgb.Booster()
 booster.load_model('xgb_forflask.xgb')
 model_xgb._Booster = booster
 
+# all indicators for the graphics
 available_indicators = (np.array(df.drop(columns=['SK_ID_CURR']).columns))
+# location related indicators
 flat_indicators = np.array(df[['Residency external option rating', 'Client region with city rating']].columns)
+# financial indicators
 credit_indicators= np.array(df[['Cash or revolving loan', 'Number of drawings for a month, 60 days ago', 'Number of paid installment', 'Days past due during the month of previous credit', 'Total years of loan (loan/annuity)', 'Prescribed installment amount of previous credit on this installment']].columns)
+# client numbers
 sk_indicators = df['SK_ID_CURR']
 
-
+# color settings for some texts
 colors = {
     'background': '#111111',
     'text': '#7FDBFF'
 }
 
+# dash app layout
 dash_app1.layout = html.Div([
 
-
+  # 1th row dashboard title
     html.H2(children='Loan survey for the client number: ', style={
             'textAlign': 'center',
             'color': colors['text']}),
-
+    # 2nd row empty block  left
     html.Div([  
         ],style={'width': '33%', 'display': 'inline-block'}),
- 
+
+    # 2nd row center block, dropdown for client selection
     html.Div([
          
             dcc.Dropdown(
@@ -64,27 +73,23 @@ dash_app1.layout = html.Div([
                 style={"width": "100%","verticalAlign":"middle"})   
         ],style={'width': '33%','textAlign': 'center', 'display': 'inline-block'}),
 
-
+    # 2nd row empty block  right
     html.Div([  
         ],style={'width': '33%', 'display': 'inline-block'}),
-#,style=dict(display='flex')
-#"justify-content": "center"
-#style = {"width":"100%", "display": "flex", "align-items": "center"}
 
+    # 3rd row, text explaining if the client can get the loan
     html.Div(id='display-selected-values',style={'font-weight': 'bold'}),
-    #, 'font-style': 'italic', 'font-weight': 'bold',color': 'blue', 
-    
 
+    # 4th row, title for the pie charts
     html.H3(children='Financial behavior, Real Estate type and Working exprience and education type for all the clients', style={
         'textAlign': 'center',
         'color': colors['text']
         }),
 
-
-
+    # 5th row
     html.Div([
 
-
+        # 5th row left block, dropdown for the financial based piechart
         html.Div([
             dcc.Dropdown(
                 id='my_dropdown_binaries',
@@ -103,6 +108,7 @@ dash_app1.layout = html.Div([
     
         ),
 
+       # 5th row center block, dropdown for the location based piechart
         html.Div([
             dcc.Dropdown(
                 id='my_dropdown_binaries2',
@@ -116,11 +122,9 @@ dash_app1.layout = html.Div([
             ),
         ],
         style={'width': '33%', 'display': 'inline-block'}
-    #    className='col-4'
-    #    className = 'four columns'
      ),
         
-
+        # 5th row right block, dropdown for the age, education, imcome based piechart
         html.Div([
             dcc.Dropdown(
                 id='my_dropdown_binaries3',
@@ -134,31 +138,28 @@ dash_app1.layout = html.Div([
             ),
         ],
         style={'width': '33%', 'display': 'inline-block'}
-    #    className='col-4'
-    #     className = 'four columns'
         ),
 
         ],
         className='row'
     ),
-#    html.Div([
-#        dcc.Graph(id='the_graph_binaries',style={"width": "25%"}),
-#        dcc.Graph(id='the_graph_binaries2',style={"width": "25%"})
-#    ]),
 
+    #6th row left, financial related pie chart
     html.Div([
         dcc.Graph(id='the_graph_binaries'),
     ], style={'display': 'inline-block', 'width': '33%'}),
 
+    #6th row center, location related pie chart
     html.Div([
         dcc.Graph(id='the_graph_binaries2'),
     ], style={'display': 'inline-block', 'width': '33%'}),
 
+    #6th row right, age, education, income related pie chart
     html.Div([
         dcc.Graph(id='the_graph_binaries3'),
     ], style={'display': 'inline-block', 'width': '33%'}),
 
-
+    #7th row left, dropdown for location related histogram
     html.Div([
 
         html.Div([
@@ -170,6 +171,7 @@ dash_app1.layout = html.Div([
         ],
         style={'width': '49%', 'display': 'inline-block'}),
 
+        #7th row right, dropdown for financial related histogram
         html.Div([
             dcc.Dropdown(
                 id='dropdown_hist2',
@@ -180,17 +182,17 @@ dash_app1.layout = html.Div([
         style={'width': '49%', 'float': 'right', 'display': 'inline-block'}),
     ]),
 
+    #8th row left, location related histogram
     html.Div([
         dcc.Graph(id='the_graph_hist1'),
     ], style={'display': 'inline-block', 'width': '49%'}),
 
+    #8th row right, financial related histogram
     html.Div([
         dcc.Graph(id='the_graph_hist2'),
     ], style={'display': 'inline-block', 'width': '49%'}),
 
- #   html.Div([
- #       dcc.Graph(id='the_graph_binaries2',style={"width": "25%"})
- #   ]),
+    #9th row, dropdown for the graph, radioitems for linear, log shift
     html.Div([
 
         html.Div([
@@ -223,9 +225,11 @@ dash_app1.layout = html.Div([
         ],style={'width': '49%', 'float': 'right', 'display': 'inline-block'})
     ]),
 
+    # 10th row left, empty block
     html.Div([  
         ],style={'width': '9%', 'display': 'inline-block'}),
     
+    # 10th row center, the graph
     html.Div([
         dcc.Graph(id='indicator-graphic'),
 
@@ -243,24 +247,27 @@ dash_app1.layout = html.Div([
 
         ], style={'display': 'inline-block', 'width': '82%'}),
 
+    # 10th row left, empty block
     html.Div([  
         ],style={'width': '9%', 'display': 'inline-block'})
     
 ],
 className='container')
 
+# call back of the text describing the client and its egibility to get a loan
 @dash_app1.callback(
     Output('display-selected-values', 'children'),
     [Input('Client number', 'value')])
 
-#def set_display_children(client_sk_num):
-#    in_dat = int(df['OWN_CAR_VALUABLE'][df['SK_ID_CURR'] == client_sk_num].iloc[0])
-#    return u'The client number {} {} '.format(client_sk_num,int(df['OWN_CAR_VALUABLE'][df['SK_ID_CURR'] == client_sk_num].iloc[0]),)
-
+# function filing the text describing the client and its egibility to get a loan
 def set_display_children(client_sk_num):
+    # client selection
     i1 = df[df['SK_ID_CURR'] == client_sk_num].index
+    # data of the selected client
     df_sk_id_select = pd.DataFrame(data =X_red_scaled.iloc[i1].values.reshape(1, -1), columns=X_red_scaled.columns)
+    # computation of the probability to get a loan
     target = model_xgb.predict_proba(df_sk_id_select)[:, 1] 
+    # the threshold for the model is set to 0.04 for a sensitivity of 0.95
     if target >= 0.04:
         target_message='ALLOWED'
     elif target < 0.04:
@@ -307,10 +314,12 @@ def set_display_children(client_sk_num):
     education_income_rating,
     cash_revolving_loan))
 
+# callback for the 1st piechart
 @dash_app1.callback(
     Output(component_id='the_graph_binaries', component_property='figure'),
     [Input(component_id='my_dropdown_binaries', component_property='value')])
 
+#pie chart share criteria def and settings
 def update_graph1(my_dropdown_b):
     dff_b = (df[['Cash or revolving loan',
     'Number of drawings for a month, 60 days ago',
@@ -334,8 +343,6 @@ def update_graph1(my_dropdown_b):
 
     dff_b.loc[df['Days past due during the month of previous credit'] > 0, 'Days past due during the month of previous credit'] = '> 0'
     dff_b.loc[df['Days past due during the month of previous credit'] == 0, 'Days past due during the month of previous credit'] = '= 0'
-#           
-#    print(df.iloc[1])
 
     piechart=px.pie(
             data_frame=dff_b,
@@ -345,11 +352,12 @@ def update_graph1(my_dropdown_b):
 
     return (piechart)
 
+# callback for the 2nd piechart
 @dash_app1.callback(
     Output(component_id='the_graph_binaries2', component_property='figure'),
     [Input(component_id='my_dropdown_binaries2', component_property='value')])
 
-
+#pie chart share criteria def and settings
 def update_graph1_2(my_dropdown_b_2):
     dff_b = df[['Residency external option rating','Client region with city rating']]
     
@@ -371,10 +379,12 @@ def update_graph1_2(my_dropdown_b_2):
 
     return (piechart_2)
 
+# callback for the 3rd piechart
 @dash_app1.callback(
     Output(component_id='the_graph_binaries3', component_property='figure'),
     [Input(component_id='my_dropdown_binaries3', component_property='value')])
 
+#pie chart share criteria def and settings
 def update_graph1_3(my_dropdown_b_3):
     dff_b = df[['Education income rating','Age, employment experience, registration and publication date rating']]
     
@@ -393,10 +403,12 @@ def update_graph1_3(my_dropdown_b_3):
 
     return (piechart_3)
 
+# callback for 1rst histogram
 @dash_app1.callback(
     Output(component_id='the_graph_hist1', component_property='figure'),
     [Input(component_id='dropdown_hist1', component_property='value')])
 
+# update the histogram when client number is changed
 def update_hist1(my_dropdown_h1):
     dff_h1 = df.drop(columns=['SK_ID_CURR'])
 
@@ -408,10 +420,12 @@ def update_hist1(my_dropdown_h1):
 
     return (hist1chart)
 
+# callback for 2nd histogram
 @dash_app1.callback(
     Output(component_id='the_graph_hist2', component_property='figure'),
     [Input(component_id='dropdown_hist2', component_property='value')])
 
+# update the histogram when client number is changed
 def update_hist2(my_dropdown_h2):
     dff_h2 = df.drop(columns=['SK_ID_CURR'])
 
@@ -423,6 +437,7 @@ def update_hist2(my_dropdown_h2):
 
     return (hist2chart)
 
+# callback the graph
 @dash_app1.callback(Output('indicator-graphic', 'figure'),
     [Input('xaxis-column', 'value'),
     Input('yaxis-column', 'value'),
@@ -430,6 +445,7 @@ def update_hist2(my_dropdown_h2):
     Input('yaxis-type', 'value'),
     Input('crr-slider', 'value')])
 
+# update the graph when client number is changed
 def update_graph2(xaxis_column_name, yaxis_column_name,
                  xaxis_type, yaxis_type,
                  region_value):
@@ -465,9 +481,11 @@ def update_graph2(xaxis_column_name, yaxis_column_name,
 
 @server.route('/')
 @server.route('/hello')
+# welcome page
 def hello():
     return 'Welcome to the demo project'
 
+# dashboard page
 @server.route('/dashboard/')
 def render_dashboard():
     return flask.redirect('/dash1')
@@ -477,8 +495,10 @@ app11 = DispatcherMiddleware(server, {
     '/dash1': dash_app1.server
 })
 
+# when running slimply as localhost
 #if __name__ == '__main__':
 #    run_simple('localhost', 8050, app11) 
 
+# running flask app
 if __name__ == '__main__':
     server.run(debug=True)
