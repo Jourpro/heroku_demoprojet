@@ -268,10 +268,11 @@ def set_display_children(client_sk_num):
     # computation of the probability to get a loan
     target = model_xgb.predict_proba(df_sk_id_select)[:, 1] 
     # the threshold for the model is set to 0.04 for a sensitivity of 0.95
-    if target >= 0.04:
-        target_message='ALLOWED'
-    elif target < 0.04:
+    Threshold_loan = 0.05
+    if target >= Threshold_loan:
         target_message='REJECTED'
+    elif target < Threshold_loan:
+        target_message='ALLOWED'
 
     a1 = int(df['Client region with city rating'][df['SK_ID_CURR'] == client_sk_num].iloc[0])
     a2 = int(df['Education income rating'][df['SK_ID_CURR'] == client_sk_num].iloc[0])
@@ -296,14 +297,14 @@ def set_display_children(client_sk_num):
         cash_revolving_loan = 'revolving loan'
 
 #Age, employment experience, registration and publication date rating
-    return (u'The client number {} has been {} to loan based on the following criteria \
+    return (u'The client number {} has been {} to loan with a probability of {} and threshold of {} based on the following criteria \
         in order of significance. The client has {} total years of loan (loan/annuity) and \
             ${} of prescribed installment amount of previous credit on this installment, \
-                 {:.2f} as residency external option rating (best score 1), and {}  paid \
+                 {:.2f} as residency external option rating, and {}  paid \
                      installments. The client had {} drawings for a month, 60 days ago \
                          and {} days past due during the month of previous credit. The \
                               client region with city rating is {}. The education income \
-                                   rating is {}. This is a {}.'.format(client_sk_num,target_message,
+                                   rating is {}. This is a {}.'.format(client_sk_num,target_message,target,Threshold_loan,
     int(df['Total years of loan (loan/annuity)'][df['SK_ID_CURR'] == client_sk_num].iloc[0]),
     int(df['Prescribed installment amount of previous credit on this installment'][df['SK_ID_CURR'] == client_sk_num].iloc[0]),
     df['Residency external option rating'][df['SK_ID_CURR'] == client_sk_num].iloc[0],
