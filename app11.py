@@ -266,7 +266,7 @@ def set_display_children(client_sk_num):
     # data of the selected client
     df_sk_id_select = pd.DataFrame(data =X_red_scaled.iloc[i1].values.reshape(1, -1), columns=X_red_scaled.columns)
     # computation of the probability to get a loan
-    target = model_xgb.predict_proba(df_sk_id_select)[:, 1] 
+    target = float(model_xgb.predict_proba(df_sk_id_select)[:, 1])
     # the threshold for the model is set to 0.04 for a sensitivity of 0.95
     Threshold_loan = 0.05
     if target >= Threshold_loan:
@@ -304,7 +304,7 @@ def set_display_children(client_sk_num):
                      installments. The client had {} drawings for a month, 60 days ago \
                          and {} days past due during the month of previous credit. The \
                               client region with city rating is {}. The education income \
-                                   rating is {}. This is a {}.'.format(client_sk_num,target_message,target[0],Threshold_loan,
+                                   rating is {}. This is a {}.'.format(client_sk_num,target_message,target,Threshold_loan,
     int(df['Total years of loan (loan/annuity)'][df['SK_ID_CURR'] == client_sk_num].iloc[0]),
     int(df['Prescribed installment amount of previous credit on this installment'][df['SK_ID_CURR'] == client_sk_num].iloc[0]),
     df['Residency external option rating'][df['SK_ID_CURR'] == client_sk_num].iloc[0],
