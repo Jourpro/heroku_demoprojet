@@ -8,5 +8,6 @@ requirements.txt est un fichier texte que lit heroku pour savoir quelles librair
 pour le bon fonctionnement de app11.py
 Le dataset des donnees test pour effectuer la prediction est df_test_red_dash.csv
 Ce dataset est charge dans app11.py
+Le dataset des seuils et des poids des features sont df_xgb_limit.csv et df_coef_xgboo.csv
 bootstrap.min.css contient les casading style sheets de bootstrap
 
