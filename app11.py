@@ -343,12 +343,24 @@ def set_display_children(client_sk_num):
     a2 = int(df['Education income rating'][df['SK_ID_CURR'] == client_sk_num].iloc[0])
     a3 = int(df['Cash or revolving loan'][df['SK_ID_CURR'] == client_sk_num].iloc[0])
     a4 = int(df['Age, employment experience, registration and publication date rating'][df['SK_ID_CURR'] == client_sk_num].iloc[0])
+    b1 = int(df_xgb_limit['Client region with city rating'].values[0])
+    b2 = int(df_xgb_limit['Education income rating'].values[0])
+    b3 = int(df_xgb_limit['Cash or revolving loan'].values[0])
+    b4 = int(df_xgb_limit['Age, employment experience, registration and publication date rating'].values[0])
+    
     if a1 == 1:
         city_rating = 'first'
     elif a1 == 2:
         city_rating = 'second' 
     elif a1 == 3:
         city_rating = 'third'
+
+    if b1 == 1:
+        city_rating_critical = 'first'
+    elif b1 == 2:
+        city_rating_critical = 'second' 
+    elif b1 == 3:
+        city_rating_critical = 'third'
     
     if a2 == 2:
         education_income_rating = 'high'
@@ -356,27 +368,44 @@ def set_display_children(client_sk_num):
         education_income_rating = 'middle' 
     elif a2 == 0:
         education_income_rating = 'low'
+
+    if b2 == 2:
+        education_income_rating_critical = 'high'
+    elif b2 == 1:
+        education_income_rating_critical = 'middle' 
+    elif b2 == 0:
+        education_income_rating_critical = 'low'
     
     if a3 == 1:
         cash_revolving_loan = 'cash loan' 
     elif a3 == 0:
         cash_revolving_loan = 'revolving loan'
 
+    if b3 == 1:
+        cash_revolving_loan_critical = 'cash loan' 
+    elif b3 == 0:
+        cash_revolving_loan_critical = 'revolving loan'
+
     if a4 == 1:
         age_employment_experience = 'high' 
     elif a4 == 0:
         age_employment_experience = 'low'
 
+    if b4 == 1:
+        age_employment_experience_critical = 'high' 
+    elif b4 == 0:
+        age_employment_experience_critical = 'low'
+
 #Age, employment experience, registration and publication date rating
     return (u'The client number {} with a score of {}/95 has been {} to loan with a probability of {:.3f} and \
         threshold of {} based on the following criteria in order of significance. \
         in order of significance. The client has {} total years of loan (critical value: {}). The client has \
-        ${} of prescribed installment amount of previous credit on this installment (critical value: {}), \
+        ${} of prescribed installment amount of previous credit on this installment (critical value: ${}), \
                  {:.2f} as residency external option rating (critical value: {:.2f}), and {}  paid \
                      installments (critical value: {}). The client had {} drawings for a month, 60 days ago (critical value: {})\
                          and {} days past due during the month of previous credit (critical value: {}). The \
-                              client region with city rating is {}. The education income \
-                                   rating is {}. The client age, employment experience, registration and publication date rating is {}. This is a {}.'.format(client_sk_num,int(score_client),target_message,target,Threshold_loan,
+                              client region with city rating is {} (critical value: {}). The education income \
+                                   rating is {} (critical value: {}). The client age, employment experience, registration and publication date rating is {} (critical value: {}). This is a {} (critical value: {}).'.format(client_sk_num,int(score_client),target_message,target,Threshold_loan,
     int(df['Total years of loan (loan/annuity)'][df['SK_ID_CURR'] == client_sk_num].iloc[0]),
     int(df_xgb_limit['Total years of loan (loan/annuity)'].values[0]),
     int(df['Prescribed installment amount of previous credit on this installment'][df['SK_ID_CURR'] == client_sk_num].iloc[0]),
@@ -390,9 +419,13 @@ def set_display_children(client_sk_num):
     int(df['Days past due during the month of previous credit'][df['SK_ID_CURR'] == client_sk_num].iloc[0]),
     int(df_xgb_limit['Days past due during the month of previous credit'].values[0]),
     city_rating,
+    city_rating_critical,
     education_income_rating,
-    age_employment_experience,
-    cash_revolving_loan))
+    education_income_rating_critical,
+    age_employment_experience, 
+    age_employment_experience_critical,
+    cash_revolving_loan,
+    cash_revolving_loan_critical))
 
 # callback for the 1st piechart
 @dash_app1.callback(
