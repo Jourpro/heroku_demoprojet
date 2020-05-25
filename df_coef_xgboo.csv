@@ -1,0 +1,11 @@
+Features,XGBoo_coef Dataframe 1,coefs_norm
+Education income rating,47,0.02127659574468085
+"Age, employment experience, registration and publication date rating",59,0.026708918062471707
+Prescribed installment amount of previous credit on this installment,486,0.22000905387052966
+"Number of drawings for a month, 60 days ago",214,0.09687641466727026
+Residency external option rating,319,0.14440923494794025
+Days past due during the month of previous credit,63,0.028519692168401993
+Total years of loan (loan/annuity),658,0.2978723404255319
+Cash or revolving loan,41,0.018560434585785424
+Client region with city rating,54,0.02444545043005885
+Number of paid installment,268,0.1213218650973291
