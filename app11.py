@@ -337,7 +337,7 @@ def set_display_children(client_sk_num):
     df_xgb_limit = pd.read_csv('df_xgb_limit.csv')
     df_coef_xgboo = pd.read_csv('df_coef_xgboo.csv')
 
-
+    score_client = score_xgb(df,client_sk_num,df_xgb_limit,df_coef_xgboo)
 
     a1 = int(df['Client region with city rating'][df['SK_ID_CURR'] == client_sk_num].iloc[0])
     a2 = int(df['Education income rating'][df['SK_ID_CURR'] == client_sk_num].iloc[0])
@@ -368,7 +368,8 @@ def set_display_children(client_sk_num):
         age_employment_experience = 'low'
 
 #Age, employment experience, registration and publication date rating
-    return (u'The client number {} has been {} to loan with a probability of {:.3f} and threshold of {} based on the following criteria \
+    return (u'The client number {} has been {} to loan with a probability of {:.3f} and \
+        threshold of {} based on the following criteria \
         in order of significance. The client has {} total years of loan (loan/annuity) and \
             ${} of prescribed installment amount of previous credit on this installment, \
                  {:.2f} as residency external option rating, and {}  paid \
