@@ -371,12 +371,12 @@ def set_display_children(client_sk_num):
     return (u'The client number {} with a score of {}/95 has been {} to loan with a probability of {:.3f} and \
         threshold of {} based on the following criteria in order of significance. \
         in order of significance. The client has {} total years of loan (loan/annuity) and \
-            ${} of prescribed installment amount of previous credit on this installment, \
+        ${} of prescribed installment amount of previous credit on this installment, \
                  {:.2f} as residency external option rating, and {}  paid \
                      installments. The client had {} drawings for a month, 60 days ago \
                          and {} days past due during the month of previous credit. The \
                               client region with city rating is {}. The education income \
-                                   rating is {}. The client age, employment experience, registration and publication date rating is {}. This is a {}.'.format(client_sk_num,score_client,target_message,target,Threshold_loan,
+                                   rating is {}. The client age, employment experience, registration and publication date rating is {}. This is a {}.'.format(client_sk_num,int(score_client),target_message,target,Threshold_loan,
     int(df['Total years of loan (loan/annuity)'][df['SK_ID_CURR'] == client_sk_num].iloc[0]),
     int(df['Prescribed installment amount of previous credit on this installment'][df['SK_ID_CURR'] == client_sk_num].iloc[0]),
     df['Residency external option rating'][df['SK_ID_CURR'] == client_sk_num].iloc[0],
