@@ -370,20 +370,25 @@ def set_display_children(client_sk_num):
 #Age, employment experience, registration and publication date rating
     return (u'The client number {} with a score of {}/95 has been {} to loan with a probability of {:.3f} and \
         threshold of {} based on the following criteria in order of significance. \
-        in order of significance. The client has {} total years of loan (critical value:{}). The client has \
-        ${} of prescribed installment amount of previous credit on this installment, \
-                 {:.2f} as residency external option rating, and {}  paid \
-                     installments. The client had {} drawings for a month, 60 days ago \
-                         and {} days past due during the month of previous credit. The \
+        in order of significance. The client has {} total years of loan (critical value: {}). The client has \
+        ${} of prescribed installment amount of previous credit on this installment (critical value: {}), \
+                 {:.2f} as residency external option rating (critical value: {:.2f}), and {}  paid \
+                     installments (critical value: {}). The client had {} drawings for a month, 60 days ago (critical value: {})\
+                         and {} days past due during the month of previous credit (critical value: {}). The \
                               client region with city rating is {}. The education income \
                                    rating is {}. The client age, employment experience, registration and publication date rating is {}. This is a {}.'.format(client_sk_num,int(score_client),target_message,target,Threshold_loan,
     int(df['Total years of loan (loan/annuity)'][df['SK_ID_CURR'] == client_sk_num].iloc[0]),
     int(df_xgb_limit['Total years of loan (loan/annuity)'].values[0]),
     int(df['Prescribed installment amount of previous credit on this installment'][df['SK_ID_CURR'] == client_sk_num].iloc[0]),
+    int(df_xgb_limit['Prescribed installment amount of previous credit on this installment'].values[0]),
     df['Residency external option rating'][df['SK_ID_CURR'] == client_sk_num].iloc[0],
+    df_xgb_limit['Residency external option rating'].values[0],
     int(df['Number of paid installment'][df['SK_ID_CURR'] == client_sk_num].iloc[0]),
+    int(df_xgb_limit['Number of paid installment'].values[0]),
     int(df['Number of drawings for a month, 60 days ago'][df['SK_ID_CURR'] == client_sk_num].iloc[0]),
+    int(df_xgb_limit['Number of drawings for a month, 60 days ago'].values[0]),
     int(df['Days past due during the month of previous credit'][df['SK_ID_CURR'] == client_sk_num].iloc[0]),
+    int(df_xgb_limit['Days past due during the month of previous credit'].values[0]),
     city_rating,
     education_income_rating,
     age_employment_experience,
