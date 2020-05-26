@@ -47,7 +47,7 @@ credit_indicators= np.array(df[['Cash or revolving loan', 'Number of drawings fo
 # client numbers
 sk_indicators = df['SK_ID_CURR']
 
-df_limit = pd.read_csv('df_xgb_limit.csv')
+df_limit = pd.read_csv('df_xgb_limit.csv').round(decimals=2)
 df_table_inter1 = df.drop(columns=['SK_ID_CURR'])[:1].round(decimals=2)
 df_table_inter3 =  pd.DataFrame({'Status': ['client','critical value']}).reset_index(drop=True)
 df_table_inter1_limit = df_table_inter1.append(df_limit).reset_index(drop=True)
