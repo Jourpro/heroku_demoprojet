@@ -436,7 +436,7 @@ def set_display_children(client_sk_num):
                               the education income rating, the client age, employment experience, registration and publication date rating and \
                                    the cash or revolving loan status.'.format(client_sk_num,target_message,target,Threshold_loan))
     
-
+# callback of the table
 @dash_app1.callback(
     Output('table','data'),
     [Input('Client number', 'value')])
