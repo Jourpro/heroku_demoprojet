@@ -433,7 +433,7 @@ def set_display_children(client_sk_num):
                  the residency external option rating, the paid installments, the number drawings for a month, 60 days ago, \
                            the number of days past due during the month of previous credit, the client region with city rating, \
                               the education income rating, the client age, employment experience, registration and publication date rating and \
-                                   the cash or revolving loan status.'.format(client_sk_num,target_message,target,Threshold_loan)
+                                   the cash or revolving loan status.'.format(client_sk_num,target_message,target,Threshold_loan))
     
 
 @dash_app1.callback(
