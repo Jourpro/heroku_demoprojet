@@ -3,6 +3,7 @@ from dash import Dash
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
+import dash_table
 import numpy as np
 import pandas as pd
 import plotly.graph_objs as go
@@ -45,6 +46,12 @@ flat_indicators = np.array(df[['Residency external option rating', 'Client regio
 credit_indicators= np.array(df[['Cash or revolving loan', 'Number of drawings for a month, 60 days ago', 'Number of paid installment', 'Days past due during the month of previous credit', 'Total years of loan (loan/annuity)', 'Prescribed installment amount of previous credit on this installment']].columns)
 # client numbers
 sk_indicators = df['SK_ID_CURR']
+
+df_limit = pd.read_csv('df_xgb_limit.csv')
+df_table_inter1 = df.drop(columns=['SK_ID_CURR'])[:1].round(decimals=2)
+df_table_inter3 =  pd.DataFrame({'Status': ['client','critical value']}).reset_index(drop=True)
+df_table_inter1_limit = df_table_inter1.append(df_limit).reset_index(drop=True)
+df_table = pd.concat([df_table_inter3, df_table_inter1_limit], axis=1)
 
 # scoring function based on the the normalized weight of the features 
 # and the threshold for each feature in the shap force plot
@@ -140,6 +147,30 @@ dash_app1.layout = html.Div([
     # 3rd row, text explaining if the client can get the loan
     html.Div(id='display-selected-values',style={'font-weight': 'bold'}),
 
+    #3rd bis empty
+    html.Div([  
+        ],style={'width': '100%', 'display': 'inline-block'}), 
+    #3rd ter table
+     html.Div([  dash_table.DataTable(
+    id='table',
+    style_cell={
+        'whiteSpace': 'normal',
+        'height': 'auto',
+        'textAlign': 'center',
+    },
+    columns=[{"name": i, "id": i} for i in df_table.columns],
+    data=df_table.to_dict('records'),
+    style_header={
+        'backgroundColor': 'rgb(230, 230, 230)',
+        'fontWeight': 'bold'
+    },
+    style_data_conditional=[{
+            'if': {'filter_query': '{{Total years of loan (loan/annuity)}} = {}'.format(df_table['Total years of loan (loan/annuity)'].min()),
+            },
+            'backgroundColor': '#FF4136',
+            'color': 'white'
+    },])
+        ]),
     # 4th row, title for the pie charts
     html.H3(children='Financial behavior, Real Estate type and Working exprience and education type for all the clients', style={
         'textAlign': 'center',
@@ -426,6 +457,40 @@ def set_display_children(client_sk_num):
     age_employment_experience_critical,
     cash_revolving_loan,
     cash_revolving_loan_critical))
+
+@dash_app1.callback(
+    Output('table','data'),
+    [Input('Client number', 'value')])
+
+def updateTable(client_sk_num):
+    i1_tb = df[df['SK_ID_CURR'] == client_sk_num].index
+    df_sk_id_select_tb = pd.DataFrame(data =df.iloc[i1_tb].values.reshape(1, -1), columns=df.columns)
+    df_table_sk_id_select = df_sk_id_select_tb.drop(columns=['SK_ID_CURR']).round(decimals=2)
+    df_table_client_cv =  pd.DataFrame({'Status': ['client','critical value']}).reset_index(drop=True)
+    df_table_sk_id_select_limit = df_table_sk_id_select.append(df_limit).reset_index(drop=True)
+    df_table_up = pd.concat([df_table_client_cv, df_table_sk_id_select_limit], axis=1)
+    df_table_up.replace({'Cash or revolving loan': 1}, {'Cash or revolving loan': 'cash loan'}, inplace =True)
+    df_table_up.replace({'Cash or revolving loan': 0}, {'Cash or revolving loan': 'revolving loan'}, inplace =True)
+
+    df_table_up.replace({'Client region with city rating': 1}, 
+                  {'Client region with city rating': 'First'}, inplace =True)
+    df_table_up.replace({'Client region with city rating': 2}, 
+                  {'Client region with city rating': 'Second'}, inplace =True)
+    df_table_up.replace({'Client region with city rating': 3}, 
+                  {'Client region with city rating': 'Third'}, inplace =True)
+
+    df_table_up.replace({'Education income rating': 0}, 
+                  {'Education income rating': 'Low'}, inplace =True)
+    df_table_up.replace({'Education income rating': 1}, 
+                  {'Education income rating': 'Middle'}, inplace =True)
+    df_table_up.replace({'Education income rating': 2}, 
+                  {'Education income rating': 'High'}, inplace =True)
+
+    df_table_up.replace({'Age, employment experience, registration and publication date rating': 0}, 
+                  {'Age, employment experience, registration and publication date rating': 'Low'}, inplace =True)
+    df_table_up.replace({'Age, employment experience, registration and publication date rating': 1}, 
+                  {'Age, employment experience, registration and publication date rating': 'High'}, inplace =True)
+    return df_table_up.to_dict('records')
 
 # callback for the 1st piechart
 @dash_app1.callback(
