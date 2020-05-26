@@ -427,13 +427,15 @@ def set_display_children(client_sk_num):
     elif b4 == 0:
         age_employment_experience_critical = 'low'
 
-    return (u'The client number {} has been {} to loan with a probability of {:.3f} and \
-        threshold of {} based on the following criteria in order of significance: \
-         the total years of loan, the prescribed installment amount of previous credit on this installment (in $), \
-                 the residency external option rating, the paid installments, the number drawings for a month, 60 days ago, \
-                           the number of days past due during the month of previous credit, the client region with city rating, \
-                              the education income rating, the client age, employment experience, registration and publication date rating and \
-                                   the cash or revolving loan status.'.format(client_sk_num,target_message,target,Threshold_loan))
+    return (u'The client number {} has been'.format(client_sk_num))
+
+#{} to loan with a probability of {:.3f} and \
+#        threshold of {} based on the following criteria in order of significance: \
+    #     the total years of loan, the prescribed installment amount of previous credit on this installment (in $), \
+    #             the residency external option rating, the paid installments, the number drawings for a month, 60 days ago, \
+    #                       the number of days past due during the month of previous credit, the client region with city rating, \
+    #                          the education income rating, the client age, employment experience, registration and publication date rating and \
+    #                               the cash or revolving loan status.'.format(client_sk_num,target_message,target,Threshold_loan))
     
 
 @dash_app1.callback(
