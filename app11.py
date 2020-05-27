@@ -307,10 +307,9 @@ def set_display_children(client_sk_num):
     elif target < Threshold_loan:
         target_message='ALLOWED'
     # dataframes with weights based on the coef normalized weight importance 
-    #df_xgb_limit = pd.read_csv('df_xgb_limit.csv')
+    df_xgb_limit = pd.read_csv('df_xgb_limit.csv')
     #df_coef_xgboo = pd.read_csv('df_coef_xgboo.csv')
 
-    #score_client = score_xgb(df,client_sk_num,df_xgb_limit,df_coef_xgboo)
 
     a1 = int(df['Client region with city rating'][df['SK_ID_CURR'] == client_sk_num].iloc[0])
     a2 = int(df['Education income rating'][df['SK_ID_CURR'] == client_sk_num].iloc[0])
