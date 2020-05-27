@@ -54,65 +54,6 @@ df_table_inter3 =  pd.DataFrame({'Status': ['client','critical value']}).reset_i
 df_table_inter1_limit = df_table_inter1.append(df_limit).reset_index(drop=True)
 df_table = pd.concat([df_table_inter3, df_table_inter1_limit], axis=1)
 
-# scoring function based on the the normalized weight of the features 
-# and the threshold for each feature in the shap force plot
-# two category values for each features: 0 or 100 x the normalized weight of the features
-
-def score_xgb(data_frame_full,client_number,df_limit,df_coef):
-    score = 0.0
-    data_frame = data_frame_full[data_frame_full['SK_ID_CURR'] == client_number]
-    
-    cf1 = df_coef.loc[df_coef['Features'] == 'Total years of loan (loan/annuity)']['coefs_norm'].values[0]
-    lim1 = df_limit['Total years of loan (loan/annuity)'].values[0]
-    if (data_frame['Total years of loan (loan/annuity)'].values[0] <= lim1):
-        score = score + int(cf1*100)
-    
-    cf2 = df_coef.loc[df_coef['Features'] == 'Education income rating']['coefs_norm'].values[0]
-    lim2 = df_limit['Education income rating'].values[0]
-    if data_frame['Education income rating'].values[0] <= lim2:
-        score = score + int(cf2*100)
-        
-    cf3 = df_coef.loc[df_coef['Features'] == 'Age, employment experience, registration and publication date rating']['coefs_norm'].values[0]
-    lim3 = df_limit['Age, employment experience, registration and publication date rating'].values[0]
-    if data_frame['Age, employment experience, registration and publication date rating'].values[0] <= lim3:
-        score = score + int(cf3*100)
-        
-    cf4 = df_coef.loc[df_coef['Features'] == 'Prescribed installment amount of previous credit on this installment']['coefs_norm'].values[0]
-    lim4 = df_limit['Prescribed installment amount of previous credit on this installment'].values[0]
-    if data_frame['Prescribed installment amount of previous credit on this installment'].values[0] <= lim4:
-        score = score + int(cf4*100)
-    
-    cf5 = df_coef.loc[df_coef['Features'] == 'Client region with city rating']['coefs_norm'].values[0]
-    lim5 = df_limit['Client region with city rating'].values[0]
-    if data_frame['Client region with city rating'].values[0] <= lim5:
-        score = score + int(cf5*100)
-    
-    cf6 = df_coef.loc[df_coef['Features'] == 'Cash or revolving loan']['coefs_norm'].values[0]
-    lim6 = df_limit['Cash or revolving loan'].values[0]
-    if data_frame['Cash or revolving loan'].values[0] <= lim6:
-        score = score + int(cf6*100)
-        
-    cf7 = df_coef.loc[df_coef['Features'] == 'Residency external option rating']['coefs_norm'].values[0]
-    lim7 = df_limit['Residency external option rating'].values[0]
-    if data_frame['Residency external option rating'].values[0] <= lim7:
-        score = score + int(cf7*100)
-        
-    cf8 = df_coef.loc[df_coef['Features'] == 'Number of paid installment']['coefs_norm'].values[0]
-    lim8 = df_limit['Number of paid installment'].values[0]
-    if data_frame['Number of paid installment'].values[0] <= lim8:
-        score = score + int(cf8*100)
-        
-    # inverse tendency here
-    cf9 = df_coef.loc[df_coef['Features'] == 'Number of drawings for a month, 60 days ago']['coefs_norm'].values[0]
-    lim9 = df_limit['Number of drawings for a month, 60 days ago'].values[0]
-    if data_frame['Number of drawings for a month, 60 days ago'].values[0] > lim9:
-        score = score + int(cf9*100)
-        
-    cf10 = df_coef.loc[df_coef['Features'] == 'Days past due during the month of previous credit']['coefs_norm'].values[0]
-    lim10 = df_limit['Days past due during the month of previous credit'].values[0]
-    if data_frame['Days past due during the month of previous credit'].values[0] > lim10:
-        score = score + int(cf10*100)
-    return score
 
 # color settings for some texts
 colors = {
@@ -366,10 +307,10 @@ def set_display_children(client_sk_num):
     elif target < Threshold_loan:
         target_message='ALLOWED'
     # dataframes with weights based on the coef normalized weight importance 
-    df_xgb_limit = pd.read_csv('df_xgb_limit.csv')
-    df_coef_xgboo = pd.read_csv('df_coef_xgboo.csv')
+    #df_xgb_limit = pd.read_csv('df_xgb_limit.csv')
+    #df_coef_xgboo = pd.read_csv('df_coef_xgboo.csv')
 
-    score_client = score_xgb(df,client_sk_num,df_xgb_limit,df_coef_xgboo)
+    #score_client = score_xgb(df,client_sk_num,df_xgb_limit,df_coef_xgboo)
 
     a1 = int(df['Client region with city rating'][df['SK_ID_CURR'] == client_sk_num].iloc[0])
     a2 = int(df['Education income rating'][df['SK_ID_CURR'] == client_sk_num].iloc[0])
